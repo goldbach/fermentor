@@ -1,11 +1,8 @@
-#include <OneWire.h>
-
 #include <PID_v1.h>
-#include <String.h>
 
 double Setpoint, Input, Output;
 int sample_interval = 1000;
-PID COOLPID(&Input, &Output, &Setpoint, 10,1,50, REVERSE);
+PID COOLPID(&Input, &Output, &Setpoint, 10,1,5, REVERSE);
 
 int WindowSize = 5000; 
 unsigned long windowStartTime;
@@ -13,10 +10,7 @@ unsigned long windowStartTime;
 void serialEvent() {
   Setpoint = Serial.readString().toFloat();
   Serial.print("New Setpoint="); Serial.print(Setpoint);
-  Serial.println();
-
-
-  
+  Serial.println();  
 }
 
 void setup() {
@@ -36,24 +30,16 @@ void loop() {
   Input = temperature_get();
   COOLPID.Compute();
 
-  if (Input > Setpoint) {
-    turnOnCooler();
+  unsigned long now = millis();
+  if (now - windowStartTime > WindowSize) {
+    windowStartTime += WindowSize;
   }
-  else 
-  {
+  if (Output > now - windowStartTime) {
+    turnOnCooler();
+  } 
+  else {
     turnOffCooler();
   }
-
-//  unsigned long now = millis();
-//  if (now - windowStartTime > WindowSize) {
-//    windowStartTime += WindowSize;
-//  }
-//  if (Output > now - windowStartTime) {
-//    turnOnCooler();
-//  } 
-//  else {
-//    turnOffCooler();
-//  }
   Serial.print("Current="); Serial.print(Input); Serial.print(" C"); 
   Serial.print(" setp="); Serial.print(Setpoint);
   Serial.print(" outp="); Serial.print(Output);

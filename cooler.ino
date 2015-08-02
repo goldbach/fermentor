@@ -3,6 +3,7 @@
 #define RCSwitch_PIN 7 
 #define HOUSECODE "11001"
 #define COOLER_ID "00100"
+#define FRIDGE_MINTIME 120000
 
 RCSwitch rcswitch = RCSwitch();
 
@@ -21,10 +22,10 @@ bool CoolerOnStatus()
 
 void turnOnCooler() {
   unsigned long now = millis();
-  if (!cool && now > min_cool_start ) {
+  if ( (!cool) && now > min_cool_start ) {
     Serial.print(now); Serial.println(" Starting cooler");
     cool = true;
-    min_cool_stop = now + 120000;
+    min_cool_stop = now + FRIDGE_MINTIME;
     rcswitch.switchOn(HOUSECODE, COOLER_ID);
   } 
 }
@@ -34,10 +35,9 @@ void turnOffCooler() {
   if (cool && now > min_cool_stop) {
     Serial.print(now); Serial.println(" Stoping cooler");
     cool = false;
-    min_cool_start = now + 120000;
+    min_cool_start = now + FRIDGE_MINTIME;
     rcswitch.switchOff(HOUSECODE, COOLER_ID);
   }
-  // rcswitch.switchOff(HOUSECODE, COOLER_ID);
 }
 
 
