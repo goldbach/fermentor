@@ -1,11 +1,5 @@
-#include <PID_v1.h>
-
-double Setpoint, Input, Output;
-int sample_interval = 1000;
-PID COOLPID(&Input, &Output, &Setpoint, 10,1,5, REVERSE);
-
-int WindowSize = 5000; 
-unsigned long windowStartTime;
+int sample_interval = 120000;
+double Input, Setpoint;
 
 void serialEvent() {
   Setpoint = Serial.readString().toFloat();
@@ -14,36 +8,28 @@ void serialEvent() {
 }
 
 void setup() {
-  windowStartTime = millis();
   Serial.begin(9600);
   rcswitch_setup();
   temperature_setup();
   
-  Setpoint = 12;
-  Input = 25;
-  COOLPID.SetOutputLimits(0, WindowSize);
-  COOLPID.SetMode(AUTOMATIC);
-  COOLPID.SetSampleTime(sample_interval);
+  Setpoint = 20.0;
+  Input = 20.0;
 }
 
 void loop() {
-  Input = temperature_get();
-  COOLPID.Compute();
-
   unsigned long now = millis();
-  if (now - windowStartTime > WindowSize) {
-    windowStartTime += WindowSize;
-  }
-  if (Output > now - windowStartTime) {
+  Input = temperature_get();
+  
+
+  if (Input > Setpoint) {
     turnOnCooler();
   } 
   else {
     turnOffCooler();
   }
-  Serial.print("Current="); Serial.print(Input); Serial.print(" C"); 
-  Serial.print(" setp="); Serial.print(Setpoint);
-  Serial.print(" outp="); Serial.print(Output);
-  Serial.print(" CoolerOn="); Serial.print(CoolerOnStatus());
+  Serial.print("time="); Serial.print(now);
+  Serial.print(";current="); Serial.print(Input); Serial.print(" C"); 
+  Serial.print(";setpoint="); Serial.print(Setpoint); Serial.print(" C");
   Serial.println();
   delay(sample_interval);
 }

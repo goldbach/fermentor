@@ -13,6 +13,5 @@ void temperature_setup() {
 double temperature_get() {
   sensors.requestTemperatures();
   return sensors.getTempCByIndex(0);
-  // return 42.0;
 }
 
