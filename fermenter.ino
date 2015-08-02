@@ -11,7 +11,6 @@ void setup() {
   Serial.begin(9600);
   rcswitch_setup();
   temperature_setup();
-  
   Setpoint = 20.0;
   Input = 20.0;
 }
