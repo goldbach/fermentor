@@ -16,14 +16,21 @@ bool CoolerOnStatus()
   return cool;
 }
 
+void On() {
+  rcswitch.switchOn(HOUSECODE, COOLER_ID);  
+}
+void Off() {
+  rcswitch.switchOff(HOUSECODE, COOLER_ID);    
+}
+
 void turnOnCooler() {
   cool = true;
-  rcswitch.switchOn(HOUSECODE, COOLER_ID); 
+  On();
 }
 
 void turnOffCooler() {
   cool = false;
-  rcswitch.switchOff(HOUSECODE, COOLER_ID);
+  Off();
 }
 
 
