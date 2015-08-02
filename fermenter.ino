@@ -1,4 +1,4 @@
-int sample_interval = 120000;
+int sample_interval = 60000;
 double Input, Setpoint;
 
 void serialEvent() {
