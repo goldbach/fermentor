@@ -1,4 +1,4 @@
-int sample_interval = 60000;
+int sample_interval = 5000;
 double Input, Setpoint;
 
 void serialEvent() {
@@ -11,7 +11,7 @@ void setup() {
   Serial.begin(9600);
   rcswitch_setup();
   temperature_setup();
-  Setpoint = 20.0;
+  Setpoint = 12.0;
   Input = 20.0;
 }
 
